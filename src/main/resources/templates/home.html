@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" media="all" th:href="@{/css/bootstrap.min.css}">
+
+    <title>Home</title>
+</head>
+<body class="p-3 mb-2 bg-light text-black">
+<div class="container">
+    <div id="logoutDiv">
+        <form action="#" method="POST" th:action="@{/logout}">
+            <button type="submit" class="btn btn-secondary float-right">Logout</button>
+        </form>
+    </div>
+    <div id="contentDiv" style="clear: right;">
+        <nav style="clear: right;">
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link"
+                   th:classappend="${#httpServletRequest.requestURI} == '/home/files' ?'active' : ''"
+                   aria-controls="nav-files" th:href="@{/home/files}">Files</a>
+                <a class="nav-item nav-link"
+                   th:classappend="${#httpServletRequest.requestURI} == '/home/notes'? 'active' : ''"
+                   role="tab" aria-controls="nav-notes" th:href="@{/home/notes}">Notes</a>
+                <a class="nav-item nav-link" id="nav-credentials-tab" role="tab" aria-controls="nav-credentials"
+                   th:href="@{/home/credentials}">Credentials</a>
+            </div>
+        </nav>
+        <div class="tab-content" id="nav-tabContent" th:switch="${#httpServletRequest.requestURI}">
+            <!-- TAB 1 - FILES -->
+            <div th:case="'/home/files'">
+                <div class="tab-pane fade" id="nav-files" role="tabpanel"
+                     th:replace="fragments/files.html :: files(data = ${fileList})"></div>
+            </div>
+
+            <!-- TAB 2 - NOTES -->
+            <div th:case="'/home/notes'">
+                <div class="tab-pane fade" id="nav-notes" role="tabpanel"
+                     th:replace="fragments/notes.html :: notes(data = ${noteList})"></div>
+            </div>
+
+
+
+
+            <!-- TAB 3 - CREDENTIALS -->
+            <div th:case="'/home/credentials'" class="tab-pane fade" id="nav-credentials" role="tabpanel" >
+CREDS
+            </div>
+            <!--            <p th:case="*">User is some other thing</p>-->
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/js/jquery-slim.min.js}"></script>
+<script th:src="@{/js/popper.min.js}"></script>
+<script th:src="@{/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
