@@ -11,11 +11,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
 import java.security.Principal;
 
 @Controller
@@ -43,16 +45,11 @@ public class FilesController {
         IOUtils.copy(is, response.getOutputStream());
     }
 
-//    check for uniqueness
-//    check if null
-//    check for error
-//    check size
     @PostMapping()
-    public String uploadFile(@RequestParam("fileUpload") MultipartFile multipartFile, Principal principal) {
+    public String uploadFile(@RequestParam("fileUpload") MultipartFile multipartFile, Principal principal, RedirectAttributes redirectAttributes) {
         User user = userService.getUser(principal.getName());
-        File file;
         try {
-            file = new File(
+            File file = new File(
                     multipartFile.getOriginalFilename(),
                     multipartFile.getContentType(),
                     String.valueOf(multipartFile.getSize()),
@@ -60,10 +57,15 @@ public class FilesController {
                     user.getUserId()
             );
             fileService.uploadFile(file);
+            redirectAttributes.addFlashAttribute("uploadSuccess", "File successfully uploaded");
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("uploadError", e.getMessage());
+            redirectAttributes.addFlashAttribute("fileName", multipartFile.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong, try again");
         }
-        return "redirect:/home";
+        return "redirect:/home/files";
     }
 
     @GetMapping("/delete/{id}")

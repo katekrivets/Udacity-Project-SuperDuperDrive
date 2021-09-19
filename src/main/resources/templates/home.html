@@ -33,7 +33,7 @@
             <!-- TAB 1 - FILES -->
             <div th:case="'/home/files'">
                 <div class="tab-pane fade" id="nav-files" role="tabpanel"
-                     th:replace="fragments/files.html :: files(data = ${fileList})"></div>
+                     th:replace="fragments/files.html :: files(data = ${fileList}, uploadError=${uploadError}, uploadSuccess=${uploadSuccess})"></div>
             </div>
 
             <!-- TAB 2 - NOTES -->

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 
@@ -31,13 +32,20 @@ public class NoteController {
     }
 
     @PostMapping()
-    public String saveNote(@ModelAttribute Note note, Principal principal) {
-        if (note.getNoteId() == null) {
-            User user = userService.getUser(principal.getName());
-            note.setUserId(user.getUserId());
-            noteService.saveNote(note);
-        } else {
-            noteService.updateNote(note);
+    public String saveNote(@ModelAttribute Note note, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            if (note.getNoteId() == null) {
+                User user = userService.getUser(principal.getName());
+                note.setUserId(user.getUserId());
+                noteService.saveNote(note);
+                redirectAttributes.addFlashAttribute("uploadSuccess", "Note successfully created");
+            } else {
+                noteService.updateNote(note);
+                redirectAttributes.addFlashAttribute("uploadSuccess", "Note successfully updated");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong, try again");
         }
         return "redirect:/home/notes";
     }

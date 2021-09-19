@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<div class="tab-pane fade show active" id="nav-files" role="tabpanel" th:fragment="files (data)">
+<div class="tab-pane fade show active" id="nav-files" role="tabpanel" th:fragment="files (data, uploadError, uploadSuccess)">
     <form action="#" enctype="multipart/form-data" method="POST" th:action="@{/files}">
         <div class="container">
             <div class="row" style="margin: 1em;">
@@ -27,7 +27,11 @@
         </div>
     </form>
     <div class="container">
+        <div class="alert alert-danger" role="alert" th:if="${uploadError}" th:text="${uploadError}">
+        </div>
+        <div class="alert alert-success" role="alert" th:if="${uploadSuccess}" th:text="${uploadSuccess}">
 
+        </div>
     </div>
     <div class="table-responsive" >
         <table class="table table-striped" id="fileTable">

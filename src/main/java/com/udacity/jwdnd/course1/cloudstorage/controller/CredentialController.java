@@ -3,15 +3,13 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.CredentialsService;
-import com.udacity.jwdnd.course1.cloudstorage.services.EncryptionService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
-import java.security.SecureRandom;
-import java.util.Base64;
 
 @Controller
 @RequestMapping("/credentials")
@@ -32,13 +30,21 @@ public class CredentialController {
     }
 
     @PostMapping()
-    public String saveCredential(@ModelAttribute Credential credential, Principal principal) {
-        if (credential.getCredentialId() == null) {
-            User user = userService.getUser(principal.getName());
-            credential.setUserId(user.getUserId());
-            credentialsService.saveCredential(credential);
-        } else {
-            credentialsService.updateCredential(credential);
+    public String saveCredential(@ModelAttribute Credential credential, Principal principal, RedirectAttributes redirectAttributes) {
+        try {
+            if (credential.getCredentialId() == null) {
+                User user = userService.getUser(principal.getName());
+                credential.setUserId(user.getUserId());
+                credentialsService.saveCredential(credential);
+                redirectAttributes.addFlashAttribute("uploadSuccess", "Credential successfully saved");
+            } else {
+                credentialsService.updateCredential(credential);
+                redirectAttributes.addFlashAttribute("uploadSuccess", "Credential successfully updated");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong, try again");
         }
         return "redirect:/home/credentials";
     }
