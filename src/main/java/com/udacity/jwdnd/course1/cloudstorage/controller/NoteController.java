@@ -5,6 +5,7 @@ import com.udacity.jwdnd.course1.cloudstorage.model.User;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,10 +23,6 @@ public class NoteController {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public String getAllNotes() {
-        return "redirect:/home";
-    }
 
     @GetMapping("/delete/{id}")
     public String deleteNoteById(@PathVariable Integer id) {
@@ -42,6 +39,6 @@ public class NoteController {
         } else {
             noteService.updateNote(note);
         }
-        return "redirect:/home/тщеуы";
+        return "redirect:/home/notes";
     }
 }
