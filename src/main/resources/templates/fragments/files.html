@@ -46,7 +46,7 @@
                 <td>
                     <a th:href="@{'files/' + ${file.fileId}}" target="_blank"
                        class="btn btn-success" th:attr="download=${file.fileName}">View</a>
-                    <a class="btn btn-danger" th:href="@{'files/delete/'+${file.fileId}}" target="_blank">Delete</a>
+                    <a class="btn btn-danger" th:href="@{'/files/delete/'+${file.fileId}}" target="_blank">Delete</a>
                 </td>
                 <th scope="row" th:text="${file.fileName}">ExampleFile.txt</th>
             </tr>

@@ -6,9 +6,7 @@ import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -48,30 +46,35 @@ public class FilesController {
     @PostMapping()
     public String uploadFile(@RequestParam("fileUpload") MultipartFile multipartFile, Principal principal, RedirectAttributes redirectAttributes) {
         User user = userService.getUser(principal.getName());
-        try {
-            File file = new File(
-                    multipartFile.getOriginalFilename(),
-                    multipartFile.getContentType(),
-                    String.valueOf(multipartFile.getSize()),
-                    multipartFile.getBytes(),
-                    user.getUserId()
-            );
-            fileService.uploadFile(file);
-            redirectAttributes.addFlashAttribute("uploadSuccess", "File successfully uploaded");
-        } catch (FileAlreadyExistsException e) {
-            redirectAttributes.addFlashAttribute("uploadError", e.getMessage());
-            redirectAttributes.addFlashAttribute("fileName", multipartFile.getOriginalFilename());
-        } catch (IOException e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong, try again");
+        if (multipartFile.isEmpty()) {
+            redirectAttributes.addFlashAttribute("uploadError", "You cannot submit empty file");
+        } else {
+            try {
+                File file = new File(
+                        multipartFile.getOriginalFilename(),
+                        multipartFile.getContentType(),
+                        String.valueOf(multipartFile.getSize()),
+                        multipartFile.getBytes(),
+                        user.getUserId()
+                );
+                fileService.uploadFile(file);
+                redirectAttributes.addFlashAttribute("uploadSuccess", "File successfully uploaded");
+            } catch (FileAlreadyExistsException e) {
+                redirectAttributes.addFlashAttribute("uploadError", e.getMessage());
+                redirectAttributes.addFlashAttribute("fileName", multipartFile.getOriginalFilename());
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("uploadError", "Something went wrong, try again");
+            }
         }
         return "redirect:/home/files";
     }
 
     @GetMapping("/delete/{id}")
     public String deleteFileById(@PathVariable Integer id, HttpServletResponse response) throws IOException {
+        System.out.println(id);
         fileService.deleteFileById(id);
-        return "redirect:/home";
+        return "redirect:/home/files";
     }
 
 
