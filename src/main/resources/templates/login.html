@@ -13,15 +13,15 @@
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
             <form action="#" method="POST" th:action="@{/login}">
-                <div class="alert alert-danger" th:if="${param.error}">
+                <div class="alert alert-danger" th:if="${param.error}" id="error-msg">
                     Invalid username or password
                 </div>
-                <div class="alert alert-dark" th:if="${param.logout}">
+                <div class="alert alert-dark" th:if="${param.logout}" id="logout-msg">
                     You have been logged out
                 </div>
                 <div class="form-group">
                     <label for="inputUsername">Username</label>
-                    <input type="input" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
+                    <input type="text" class="form-control" name="username" id="inputUsername" placeholder="Enter Username" maxlength="20" required>
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>

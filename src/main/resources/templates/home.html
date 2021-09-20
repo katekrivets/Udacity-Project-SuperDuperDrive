@@ -19,9 +19,11 @@
         <nav style="clear: right;">
             <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link"
+                   id="nav-files-tab"
                    th:classappend="${#httpServletRequest.requestURI} == '/home/files' ?'active' : ''"
                    aria-controls="nav-files" th:href="@{/home/files}">Files</a>
                 <a class="nav-item nav-link"
+                   id="nav-notes-tab"
                    th:classappend="${#httpServletRequest.requestURI} == '/home/notes'? 'active' : ''"
                    role="tab" aria-controls="nav-notes" th:href="@{/home/notes}">Notes</a>
                 <a class="nav-item nav-link" id="nav-credentials-tab" role="tab" aria-controls="nav-credentials"
