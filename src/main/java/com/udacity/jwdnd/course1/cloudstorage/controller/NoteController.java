@@ -26,8 +26,14 @@ public class NoteController {
 
 
     @GetMapping("/delete/{id}")
-    public String deleteNoteById(@PathVariable Integer id) {
-        noteService.deleteNoteById(id);
+    public String deleteNoteById(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            noteService.deleteNoteById(id);
+            redirectAttributes.addFlashAttribute("uploadSuccess", "Note successfully deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong during deletion");
+            e.printStackTrace();
+        }
         return "redirect:/home/notes";
     }
 

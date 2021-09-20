@@ -71,9 +71,14 @@ public class FilesController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteFileById(@PathVariable Integer id, HttpServletResponse response) throws IOException {
-        System.out.println(id);
-        fileService.deleteFileById(id);
+    public String deleteFileById(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            fileService.deleteFileById(id);
+            redirectAttributes.addFlashAttribute("uploadSuccess", "File successfully deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong during deletion");
+            e.printStackTrace();
+        }
         return "redirect:/home/files";
     }
 

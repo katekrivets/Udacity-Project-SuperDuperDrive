@@ -24,8 +24,14 @@ public class CredentialController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCredentialById(@PathVariable Integer id) {
-        credentialsService.deleteCredentialById(id);
+    public String deleteCredentialById(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            credentialsService.deleteCredentialById(id);
+            redirectAttributes.addFlashAttribute("uploadSuccess", "Credential successfully deleted");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("uploadError", "Something went wrong during deletion");
+            e.printStackTrace();
+        }
         return "redirect:/home/credentials";
     }
 
